@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTaskDTO } from './dto/create-task.dto';
 
-enum TaskStatus {
+export enum TaskStatus {
   pending = 'Pendente',
   completed = 'Concluída',
 }
