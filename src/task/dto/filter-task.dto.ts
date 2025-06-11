@@ -5,5 +5,5 @@ import { TaskStatus } from '../task.repository';
 export class FilterTaskDTO {
   @IsOptional()
   @IsEnum(TaskStatus)
-  status: TaskStatus;
+  status?: TaskStatus;
 }

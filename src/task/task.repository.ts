@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTaskDTO } from './dto/create-task.dto';
+import { FilterTaskDTO } from './dto/filter-task.dto';
 
 export enum TaskStatus {
   pending = 'Pendente',
@@ -27,7 +28,11 @@ export class TaskRepository {
     return newTask;
   }
 
-  findAll() {
+  findAll({ status }: FilterTaskDTO) {
+    if (status) {
+      return this.tasks.filter((task) => task.status === status);
+    }
+
     return this.tasks;
   }
 }

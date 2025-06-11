@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { TaskRepository } from './task.repository';
 import { CreateTaskDTO } from './dto/create-task.dto';
+import { FilterTaskDTO } from './dto/filter-task.dto';
 
 @Injectable()
 export class TaskService {
@@ -10,7 +11,7 @@ export class TaskService {
     return this.repository.create(data);
   }
 
-  findAll() {
-    return this.repository.findAll();
+  findAll(filter: FilterTaskDTO) {
+    return this.repository.findAll(filter);
   }
 }
