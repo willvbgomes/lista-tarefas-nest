@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { TaskService } from '../../src/task/task.service';
-import { TaskRepository } from '../../src/task/task.repository';
+import { TaskRepository, TaskStatus } from '../../src/task/task.repository';
 
 describe('TaskService', () => {
   const tasksMock = [
@@ -53,7 +53,14 @@ describe('TaskService', () => {
   });
 
   it('should return an array of tasks', () => {
-    const result = taskService.findAll();
+    const result = taskService.findAll({});
+
+    expect(result).toBeInstanceOf(Array);
+    expect(200);
+  });
+
+  it('should return an array of tasks filtered by "status" query param', () => {
+    const result = taskService.findAll({ status: TaskStatus.pending });
 
     expect(result).toBeInstanceOf(Array);
     expect(200);

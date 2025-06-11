@@ -2,6 +2,7 @@
 import { Test } from '@nestjs/testing';
 import { TaskController } from '../../src/task/task.controller';
 import { TaskService } from '../../src/task/task.service';
+import { TaskStatus } from '../../src/task/task.repository';
 
 describe('TaskController', () => {
   const taskServiceMock = {
@@ -35,7 +36,14 @@ describe('TaskController', () => {
   });
 
   it('should return an array of tasks', () => {
-    taskController.getTasks();
+    taskController.getTasks({});
+
+    expect(taskService.findAll).toHaveBeenCalled();
+    expect(200);
+  });
+
+  it('should return an array of tasks filtered by "status" query param', () => {
+    taskController.getTasks({ status: TaskStatus.pending });
 
     expect(taskService.findAll).toHaveBeenCalled();
     expect(200);
