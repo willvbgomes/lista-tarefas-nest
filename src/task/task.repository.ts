@@ -35,4 +35,16 @@ export class TaskRepository {
 
     return this.tasks;
   }
+
+  findOne(id: string) {
+    return this.tasks.find((task) => task.id === id);
+  }
+
+  update(updatedTask: Task) {
+    this.tasks = this.tasks.map((task) =>
+      task.id === updatedTask.id ? updatedTask : task,
+    );
+
+    return updatedTask;
+  }
 }
