@@ -1,6 +1,8 @@
 import { Test } from '@nestjs/testing';
 import { TaskService } from '../../src/task/task.service';
 import { TaskRepository, TaskStatus } from '../../src/task/task.repository';
+import { UpdateTaskDTO } from '../../src/task/dto/update-task.dto';
+import { NotFoundException } from '@nestjs/common';
 
 describe('TaskService', () => {
   const taskMock = {
@@ -23,7 +25,9 @@ describe('TaskService', () => {
   ];
   const repositoryMock = {
     create: jest.fn().mockReturnValue(taskMock),
+    findOne: jest.fn((id) => (id === 'valid-uuid' ? taskMock : undefined)),
     findAll: jest.fn().mockReturnValue(tasksMock),
+    update: jest.fn((dto: UpdateTaskDTO) => ({ ...taskMock, ...dto })),
   };
 
   let taskService: TaskService;
@@ -61,5 +65,29 @@ describe('TaskService', () => {
 
     expect(result).toBeInstanceOf(Array);
     expect(200);
+  });
+
+  it('should update an existing task', () => {
+    const result = taskService.update('valid-uuid', {
+      status: TaskStatus.completed,
+    });
+
+    expect(result.status).toBe('Concluída');
+    expect(200);
+  });
+
+  it('should throw a NotFoundException when updating a task with an invalid ID', () => {
+    expect(() =>
+      taskService.update('invalid-uuid', {
+        status: TaskStatus.completed,
+      }),
+    ).toThrow(
+      new NotFoundException({
+        message: 'Task not found',
+        error: 'Not Found',
+        statusCode: 404,
+      }),
+    );
+    expect(404);
   });
 });

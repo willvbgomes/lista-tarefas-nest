@@ -8,6 +8,7 @@ describe('TaskController', () => {
   const taskServiceMock = {
     create: jest.fn(),
     findAll: jest.fn(),
+    update: jest.fn(),
   };
 
   let taskController: TaskController;
@@ -47,5 +48,23 @@ describe('TaskController', () => {
 
     expect(taskService.findAll).toHaveBeenCalled();
     expect(200);
+  });
+
+  it('should update an existing task', () => {
+    taskController.updateTask('valid-uuid', { status: TaskStatus.completed });
+
+    expect(taskService.update).toHaveBeenCalledWith('valid-uuid', {
+      status: TaskStatus.completed,
+    });
+    expect(200);
+  });
+
+  it('should throw a NotFoundException when updating a task with an invalid ID', () => {
+    taskController.updateTask('invalid-uuid', { status: TaskStatus.completed });
+
+    expect(taskService.update).toHaveBeenCalledWith('invalid-uuid', {
+      status: TaskStatus.completed,
+    });
+    expect(404);
   });
 });
