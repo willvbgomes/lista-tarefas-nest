@@ -3,12 +3,13 @@ import { TaskService } from '../../src/task/task.service';
 import { TaskRepository, TaskStatus } from '../../src/task/task.repository';
 
 describe('TaskService', () => {
+  const taskMock = {
+    id: 'random-uuid-1',
+    title: 'Fake task 1',
+    status: 'Pendente',
+  };
   const tasksMock = [
-    {
-      id: 'random-uuid-1',
-      title: 'Fake task 1',
-      status: 'Pendente',
-    },
+    taskMock,
     {
       id: 'random-uuid-2',
       title: 'Fake task 2',
@@ -21,11 +22,7 @@ describe('TaskService', () => {
     },
   ];
   const repositoryMock = {
-    create: jest.fn().mockReturnValue({
-      id: 'random-uuid',
-      title: 'Fake task',
-      status: 'Pendente',
-    }),
+    create: jest.fn().mockReturnValue(taskMock),
     findAll: jest.fn().mockReturnValue(tasksMock),
   };
 
