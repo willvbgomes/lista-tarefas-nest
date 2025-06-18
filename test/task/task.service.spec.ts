@@ -28,6 +28,7 @@ describe('TaskService', () => {
     findOne: jest.fn((id) => (id === 'valid-uuid' ? taskMock : undefined)),
     findAll: jest.fn().mockReturnValue(tasksMock),
     update: jest.fn((dto: UpdateTaskDTO) => ({ ...taskMock, ...dto })),
+    delete: jest.fn(),
   };
 
   let taskService: TaskService;
@@ -82,6 +83,24 @@ describe('TaskService', () => {
         status: TaskStatus.completed,
       }),
     ).toThrow(
+      new NotFoundException({
+        message: 'Task not found',
+        error: 'Not Found',
+        statusCode: 404,
+      }),
+    );
+    expect(404);
+  });
+
+  it('should delete an existing task', () => {
+    const result = taskService.delete('valid-uuid');
+
+    expect(result).toBe(undefined);
+    expect(200);
+  });
+
+  it('should throw a NotFoundException when deleting a task with an invalid ID', () => {
+    expect(() => taskService.delete('invalid-uuid')).toThrow(
       new NotFoundException({
         message: 'Task not found',
         error: 'Not Found',

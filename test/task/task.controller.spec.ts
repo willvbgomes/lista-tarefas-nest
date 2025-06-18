@@ -9,6 +9,7 @@ describe('TaskController', () => {
     create: jest.fn(),
     findAll: jest.fn(),
     update: jest.fn(),
+    delete: jest.fn(),
   };
 
   let taskController: TaskController;
@@ -65,6 +66,20 @@ describe('TaskController', () => {
     expect(taskService.update).toHaveBeenCalledWith('invalid-uuid', {
       status: TaskStatus.completed,
     });
+    expect(404);
+  });
+
+  it('should delete an existing task', () => {
+    taskController.deleteTask('valid-uuid');
+
+    expect(taskService.delete).toHaveBeenCalledWith('valid-uuid');
+    expect(200);
+  });
+
+  it('should throw a NotFoundException when deleting a task with an invalid ID', () => {
+    taskController.deleteTask('invalid-uuid');
+
+    expect(taskService.delete).toHaveBeenCalledWith('invalid-uuid');
     expect(404);
   });
 });
