@@ -47,4 +47,8 @@ export class TaskRepository {
 
     return updatedTask;
   }
+
+  delete(deletedTask: Task) {
+    this.tasks = this.tasks.filter((task) => task.id !== deletedTask.id);
+  }
 }

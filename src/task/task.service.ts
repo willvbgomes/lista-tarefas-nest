@@ -36,4 +36,10 @@ export class TaskService {
 
     return this.repository.update(updatedTask);
   }
+
+  delete(id: string) {
+    const task = this.findTask(id);
+
+    return this.repository.delete(task);
+  }
 }
