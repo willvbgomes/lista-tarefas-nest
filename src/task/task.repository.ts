@@ -1,54 +1,34 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../database/prisma.service';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import { FilterTaskDTO } from './dto/filter-task.dto';
-
-export enum TaskStatus {
-  pending = 'Pendente',
-  completed = 'Concluída',
-}
-
-export type Task = {
-  id: string;
-  title: string;
-  status: TaskStatus;
-};
+import { UpdateTaskDTO } from './dto/update-task.dto';
 
 @Injectable()
 export class TaskRepository {
-  private tasks: Task[] = [];
+  constructor(private readonly prisma: PrismaService) {}
 
-  create({ title }: CreateTaskDTO) {
-    const newTask: Task = {
-      id: crypto.randomUUID(),
-      title,
-      status: TaskStatus.pending,
-    };
-
-    this.tasks.push(newTask);
-    return newTask;
+  async create({ title }: CreateTaskDTO) {
+    return await this.prisma.task.create({ data: { title } });
   }
 
-  findAll({ status }: FilterTaskDTO) {
+  async findAll({ status }: FilterTaskDTO) {
     if (status) {
-      return this.tasks.filter((task) => task.status === status);
+      return this.prisma.task.findMany({ where: { status } });
     }
 
-    return this.tasks;
+    return this.prisma.task.findMany();
   }
 
-  findOne(id: string) {
-    return this.tasks.find((task) => task.id === id);
+  async findOne(id: string) {
+    return await this.prisma.task.findUnique({ where: { id } });
   }
 
-  update(updatedTask: Task) {
-    this.tasks = this.tasks.map((task) =>
-      task.id === updatedTask.id ? updatedTask : task,
-    );
-
-    return updatedTask;
+  async update(id: string, data: UpdateTaskDTO) {
+    return await this.prisma.task.update({ data, where: { id } });
   }
 
-  delete(deletedTask: Task) {
-    this.tasks = this.tasks.filter((task) => task.id !== deletedTask.id);
+  async delete(id: string) {
+    return await this.prisma.task.delete({ where: { id } });
   }
 }

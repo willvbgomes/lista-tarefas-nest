@@ -8,8 +8,8 @@ import { UpdateTaskDTO } from './dto/update-task.dto';
 export class TaskService {
   constructor(private readonly repository: TaskRepository) {}
 
-  findTask(id: string) {
-    const task = this.repository.findOne(id);
+  async findTask(id: string) {
+    const task = await this.repository.findOne(id);
 
     if (!task) {
       throw new NotFoundException({
@@ -22,24 +22,23 @@ export class TaskService {
     return task;
   }
 
-  create(data: CreateTaskDTO) {
-    return this.repository.create(data);
+  async create(data: CreateTaskDTO) {
+    return await this.repository.create(data);
   }
 
-  findAll(filter: FilterTaskDTO) {
-    return this.repository.findAll(filter);
+  async findAll(filter: FilterTaskDTO) {
+    return await this.repository.findAll(filter);
   }
 
-  update(id: string, data: UpdateTaskDTO) {
-    const task = this.findTask(id);
-    const updatedTask = { ...task, ...data };
+  async update(id: string, data: UpdateTaskDTO) {
+    const { id: taskId } = await this.findTask(id);
 
-    return this.repository.update(updatedTask);
+    return await this.repository.update(taskId, data);
   }
 
-  delete(id: string) {
-    const task = this.findTask(id);
+  async delete(id: string) {
+    const { id: taskId } = await this.findTask(id);
 
-    return this.repository.delete(task);
+    return await this.repository.delete(taskId);
   }
 }

@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
+import { TaskStatus } from '@prisma/client';
 import { IsEnum, IsOptional } from 'class-validator';
-import { TaskStatus } from '../task.repository';
 
 export class FilterTaskDTO {
   @IsOptional()
